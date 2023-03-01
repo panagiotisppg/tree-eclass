@@ -27,7 +27,7 @@ def get_links(url):
      return out
 
 
-
+url = "https://eclass.aueb.gr/modules/document/?course=INF111"
 print('\n'+url)
 # SAVE
 out = []
