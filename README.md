@@ -14,7 +14,7 @@ files and folders for a subject from eclass
 
 tree-eclass requires [Python3](https://python.org/) to run.
 
-Install the dependencies and devDependencies and start the server.
+Install the required libraries.
 
 ```sh
 git clone https://github.com/panagiotisppg/tree-eclass.git
