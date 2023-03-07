@@ -6,7 +6,8 @@ def get_links(url:str, filter_words:list=[]):
      # filter_words is used to ignore links that lead outside the subject's class
      filter_words += ['&sort', 'help.php?language=el&topic=documents', '#collapse0', 
                       'info/terms.php', 'info/privacy_policy.php', 'announcements/?course=', 
-                      '/courses', 'modules/document/?course=', '&openDir=%', '/?course=']
+                      '/courses', 'modules/document/?course=', '&openDir=%', '/?course=',
+                      'help.php?language=en&', 'topic=documents&subtopic', 'creativecommons.org/licenses']
      html_page = urlopen(Request(url))
      soup = BeautifulSoup(html_page, "lxml")
      all_links = [link.get('href') for link in soup.findAll('a')]
@@ -22,4 +23,9 @@ def get_links(url:str, filter_words:list=[]):
                               out.append(f"{link} f")
                          else:
                               out.append(f"{link} d")
+     for el in out:
+          file_or_directory = el.split()[1]
+          if file_or_directory == 'f':
+               out.append(out.pop(out.index(el)))
+               break
      return out
