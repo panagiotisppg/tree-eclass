@@ -1,3 +1,4 @@
+import argparse
 from bs4 import BeautifulSoup
 from urllib.request import Request, urlopen
 
@@ -69,9 +70,6 @@ def print_tree(node, prefix='', is_last=True, tab_string='\t'):
         name = ' '.join(file.split()[1:])
         print(f"{branch_prefix}{link} {name}")
 
-
-
-import argparse
 
 if __name__ == "__main__":
     # Parse the command line arguments
