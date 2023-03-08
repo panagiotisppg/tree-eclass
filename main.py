@@ -1,8 +1,15 @@
-from src.GetLinks import get_links
-from src.tree import gen_tree
+import argparse
+from src.tree_utils import *
 
-url = "https://eclass.aueb.gr/modules/document/?course=INF111"
-# url = "https://eclass.aueb.gr/modules/document/?course=INF371"
-# url = "https://eclass.aueb.gr/modules/document/?course=INF195"
-# url = "https://eclass.aueb.gr/modules/document/?course=INF404"
-gen_tree(url)
+if __name__ == "__main__":
+    # Parse the command line arguments
+    parser = argparse.ArgumentParser(description='Generate a eclass.aueb directory tree for a given the INF number')
+    parser.add_argument('-t', '--tab-string', type=str, default='\t', help='The string used for indentation (default: \\t)')
+    parser.add_argument('-I', '--inf', type=str, required=True, help='The eclass INF number to generate the directory tree from')
+    args = parser.parse_args()
+    url = f"https://eclass.aueb.gr/modules/document/?course=INF{args.inf}"
+    # Generate the directory tree
+    tree = gen_subtree(url)
+
+    # Print the directory tree
+    print_tree(tree, tab_string=args.tab_string)

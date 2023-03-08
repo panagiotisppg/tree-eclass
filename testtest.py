@@ -32,61 +32,27 @@ def get_links(url:str, filter_words:list=[]):
 # Generate directory tree for a given url
 
 def gen_subtree(url):
-    subtree = [url, [], []] # each object inside is a list of form [root, dirs, files]]
-
     files, directories = get_links(url)
 
     return [url, [gen_subtree(x) for x in directories], files]
+tab_string = '      '
 
-
-
-
-
-
-
-# # WORKING WITH ONLY TAB SPACINGS
-# def print_tree(node, prefix='', is_last=True):
-#     # Recursively print the node and its children like the structure of the UNIX command tree.
-    
-#     # Print the prefix and node name
-#     print(prefix + ('\t' if is_last else '\t') + node[0])
-
-#     # Add the branch prefix. Depending on whether the node is the last of the directory or not
-#     branch_prefix = prefix + ('\t' if is_last else '\t')
-
-#     # Print the directories
-#     for i, child in enumerate(node[1]):
-#         # Check if is_last
-#         is_last_child = i == len(node[1]) - 1
-#         print_tree(child, branch_prefix, is_last_child)
-
-#     # Print the files
-#     for file in node[2]:
-#         print(branch_prefix + '\t' + file)
-
-
-
-
-
-"""
-     ALSO CHECK THE COMMENTED FUNCTION ABOVE AN EINAI KALYTERH
-"""
-
-def print_tree(node, prefix='', is_last=True, depth=0):
+# WORKING WITH ONLY TAB SPACINGS
+def print_tree(node, prefix='', is_last=True):
     # Print the prefix and node name
-    print(prefix + ('└── ' if is_last else '├── ') + node[0])
+    print(f"{prefix}{tab_string if is_last else tab_string}{node[0]}")
 
     # Add the branch prefix
-    branch_prefix = prefix + ('    ' if is_last else '│   ')
+    branch_prefix = prefix + (tab_string if is_last else tab_string)
 
     # Print the directories
-    for i, child in enumerate(node[1]):
-        is_last_child = i == len(node[1]) - 1
-        print_tree(child, branch_prefix + ('│   ' if is_last else '    '), is_last_child, depth + 1)
+    for child in node[1]:
+        print_tree(child, branch_prefix, child == node[1][-1])
 
     # Print the files
     for file in node[2]:
-        print(branch_prefix + ('│   ' if not is_last else '    ') + '├── ' + file)
+        print(f"{branch_prefix}{tab_string}{file}")
+
 
 if __name__ == "__main__":
      print_tree(gen_subtree(url))
