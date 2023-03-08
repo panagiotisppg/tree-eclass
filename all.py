@@ -13,11 +13,7 @@ def get_links(url:str, filter_words:list=[]):
      soup = BeautifulSoup(html_page, "lxml")
      all_links = [link.get('href') for link in soup.findAll('a')]
 
-     files_tmp = []
-     files = []
-     directories = []
-     directories_tmp = []
-     directory_names = []
+     files_tmp, files, directories, directories_tmp, directory_names = [], [], [], [], []
 
      for link in all_links:
           if all([x not in link for x in filter_words]):
