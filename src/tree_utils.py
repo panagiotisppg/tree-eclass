@@ -25,3 +25,7 @@ def print_tree(node, prefix='', is_last=True, tab_string='\t'):
     # Print the files
     for file in node[2]:
         print(f"{branch_prefix}{file}")
+
+    # Print the files
+    for file in node[2]:
+        print(f"{branch_prefix}{file}")
