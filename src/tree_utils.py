@@ -24,4 +24,6 @@ def print_tree(node, prefix='', is_last=True, tab_string='\t'):
 
     # Print the files
     for file in node[2]:
-        print(f"{branch_prefix}{file}")
+        link = file.split()[0]
+        name = ' '.join(file.split()[1:])
+        print(f"{branch_prefix}{link} {name}")
