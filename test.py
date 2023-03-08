@@ -37,10 +37,10 @@ def gen_subtree(url):
 
 def print_tree(tree):
     parent, dir_children, file_children = tree
-    print(parent)
-    print('\t', end="")
+    print(parent, end='\f')
+    print('\t', end='')
     for child in file_children:
-        print(child, end="\f")
+        print(child, end='\f')
     for child in dir_children:
         print_tree(child)
     print('\b\b\b\b')
