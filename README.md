@@ -22,4 +22,4 @@ pip3 install -r requirements.txt
 ```
 
 ##### Warning
-This code in it's current version is only used for public [eclass](https://aueb.eclass.gr) classes
+This code in it's current version is only used for public [eclass](https://eclass.aueb.gr) classes

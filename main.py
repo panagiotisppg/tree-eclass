@@ -3,7 +3,7 @@ from src.tree_utils import *
 
 if __name__ == "__main__":
     # Parse the command line arguments
-    parser = argparse.ArgumentParser(description='Generate a eclass.aueb directory tree for a given the INF number')
+    parser = argparse.ArgumentParser(description='Generate a eclass.aueb.gr directory tree for a given the INF number')
     parser.add_argument('-t', '--tab-string', type=str, default='\t', help='The string used for indentation (default: \\t)')
     parser.add_argument('-I', '--INF', type=str, required=True, help='The eclass INF number to generate the directory tree from')
     args = parser.parse_args()
