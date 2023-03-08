@@ -13,53 +13,30 @@ def get_links(url:str, filter_words:list=[]):
     html_page = urlopen(Request(url))
     soup = BeautifulSoup(html_page, "lxml")
     all_links = [link.get('href') for link in soup.findAll('a')]
-    out = []
+    files = []
+    directories = []
 
     for link in all_links:
         if all([x not in link for x in filter_words]):
             if 'http' not in link and link != '/':
                 link = 'https://eclass.aueb.gr'+link
                 if '&openDir=/ ' not in link+' ' and '&openDir= ' not in link+' ' and link != url:
-                    # link is a file if it had . near the end  else it's a directory
+                    # link is a file if it had . near the end else it's a directory
                     if '.' in link[-6:]:
-                        out.append(f"{link} f")
+                        files.append(link)
                     else:
-                        out.append(f"{link} d")
-    for el in out:
-        file_or_directory = el.split()[1]
-        if file_or_directory == 'f':
-            out.append(out.pop(out.index(el)))
-            break
-    return out
+                        directories.append(link)
 
+    return (files, directories)
 
+# Generate directory tree for a given url
 
-# Print the directory tree for a given url
-# Print the directory tree for a given url
-def gen_tree(url, depth=0, is_last=False):
-    if depth == 0:
-        print(url)
-    else:
-        if is_last:
-            print('\t'*depth + '└──', end='')
-        else:
-            print('\t'*depth + '├──', end='')
-        print(url)
-    
-    links = get_links(url)
-    for i, link in enumerate(links):
-        link_url, link_type = link.split()
-        if link_type == 'd':
-            if i == len(links)-1:
-                print('\t'*(depth) + '\n' + '\t'*depth + '└──', end='')
-                gen_tree(link_url, depth+1, True)
-            else:
-                gen_tree(link_url, depth+1)
-                print('\t'*(depth) + '\n' + '\t'*depth + '├──', end='')
-        else:
-            if i == len(links)-1:
-                print('\t'*(depth+1) + '└──', end='')
-            else:
-                print('\t'*(depth+1) + '├──', end='')
-            print(link_url)
-gen_tree(url)
+def gen_subtree(url):
+    subtree = [url, [], []] # each object inside is a list of form [root, dirs, files]]
+
+    files, directories = get_links(url)
+
+    return [url, [gen_subtree(x) for x in directories], files]
+
+if __name__ == "__main__":
+    print(gen_subtree(url))
