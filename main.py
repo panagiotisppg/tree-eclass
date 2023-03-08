@@ -58,7 +58,7 @@ def print_tree(node, prefix='', is_last=True):
         print(branch_prefix + '\t' + file)
 
 
-''' alternative version with prettier formatting
+'''
 def print_tree(node, prefix='', is_last=True, depth=0):
     # Print the prefix and node name
     print(prefix + ('└── ' if is_last else '├── ') + node[0])
@@ -66,15 +66,14 @@ def print_tree(node, prefix='', is_last=True, depth=0):
     # Add the branch prefix
     branch_prefix = prefix + ('    ' if is_last else '│   ')
 
-	# Print the files
-    for file in node[2]:
-        print(branch_prefix + ('│   ' if not is_last else '    ') + '├── ' + file)
-
     # Print the directories
     for i, child in enumerate(node[1]):
         is_last_child = i == len(node[1]) - 1
         print_tree(child, branch_prefix + ('│   ' if is_last else '    '), is_last_child, depth + 1)
-    
+
+	# Print the files
+    for file in node[2]:
+        print(branch_prefix + ('│   ' if not is_last else '    ') + '├── ' + file)
 '''
 
 if __name__ == "__main__":
