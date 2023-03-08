@@ -81,7 +81,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
     url = f"https://eclass.aueb.gr/modules/document/?course=INF{args.INF} Starting Link"
     # Generate the directory tree
-    tree = gen_subtree(url)
     print('Generating tree structure')
+    tree = gen_subtree(url)
     # Print the directory tree
     print_tree(tree, tab_string=args.tab_string)
