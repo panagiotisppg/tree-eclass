@@ -27,7 +27,10 @@ def get_links(url:str, filter_words:list=[]):
                               directories_tmp.append(link)
                               
      file_names = [link.get('title') for link in soup.findAll('a') if link.get('title') != None]
-     directory_names = [soup.find("a", href=dir_link.replace("https://eclass.aueb.gr", "")).text for dir_link in directories_tmp if soup.find("a", href=dir_link.replace("https://eclass.aueb.gr", "")) != None]
+     directory_names = [
+          soup.find("a", href=dir_link.replace("https://eclass.aueb.gr", "")).text 
+          for dir_link in directories_tmp 
+          if soup.find("a", href=dir_link.replace("https://eclass.aueb.gr", "")) is not None]
 
      for i in range(len(files_tmp)):
           files.append(f"{files_tmp[i]} {file_names[i]}")

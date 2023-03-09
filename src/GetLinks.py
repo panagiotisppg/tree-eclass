@@ -37,4 +37,3 @@ def get_links(url:str, filter_words:list=[]):
      for i in range(len(directories_tmp)):
           directories.append(f"{directories_tmp[i]} {directory_names[i]}")
      return (files, directories)
-# get_links("https://eclass.aueb.gr/modules/document/?course=INF111")
