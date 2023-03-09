@@ -1,6 +1,6 @@
 from src.GetLinks import get_links
 
-i, loading_string, all_info = 1, "Gathering eclass course info ", []
+i, loading_string, all_info = 1, "[\u001b[32m+\033[0m] Gathering eclass course info ", []
 
 # Generate directory tree for a given url
 def gen_subtree(url):
@@ -20,7 +20,7 @@ def gen_subtree(url):
 def print_tree(node, prefix='', is_last=True, tab_string='\t'):
     global all_info # all_info is going to be used for the local directory downloading...
     # Print the prefix and node name
-    print(f"{prefix}{' '.join(node[0].split()[:])}"); all_info.append(f"{' '.join(node[0].split())}")
+    print(f"{prefix}{' '.join(node[0].split()[:-1])}"); all_info.append(f"{' '.join(node[0].split())}")
 
     # Add the branch prefix
     branch_prefix = prefix + (tab_string if is_last else tab_string)
