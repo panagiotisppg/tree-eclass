@@ -1,9 +1,12 @@
 import argparse
+import os
+import time
+import requests
 from bs4 import BeautifulSoup
 from urllib.request import Request, urlopen
 
 def get_links(url:str, filter_words:list=[]):
-     working_url, already_in_dir = url.split()[0], " ".join(url.split()[1:])
+     working_url = url.split()[0]
 
      # filter_words is used to ignore links that lead outside the subject's class
      filter_words += ['&sort', 'help.php?language=el&topic=documents', '#collapse0',
@@ -39,26 +42,26 @@ def get_links(url:str, filter_words:list=[]):
 
      return (files, directories)
 
-i, loading_string = 1, "Generating tree structure "
+i, loading_string, all_info = 1, "Gathering eclass course info ", []
 # Generate directory tree for a given url
 def gen_subtree(url):
-     global i, loading_string
-     files, directories = get_links(url)
+    global i, loading_string
+    files, directories = get_links(url)
 
-     loading_string += '.'*i;     i+=1
-     print(loading_string, end='\r')
-     
-     subtree = [url, [], files]
-     for directory in directories:
-         subtree[1].append(gen_subtree(directory))
+    loading_string += '.'*i;     i+=1
+    print(loading_string, end='\r')
+    
+    subtree = [url, [], files]
+    for directory in directories:
+        subtree[1].append(gen_subtree(directory))
 
-     return subtree
+    return subtree
 
 # Print the directory tree
 def print_tree(node, prefix='', is_last=True, tab_string='\t'):
     global all_info # all_info is going to be used for the local directory downloading...
     # Print the prefix and node name
-    print(f"{prefix}{' '.join(node[0].split()[:-1])}"); all_info.append(f"{' '.join(node[0].split())}")
+    print(f"{prefix}{' '.join(node[0].split()[:])}"); all_info.append(f"{' '.join(node[0].split())}")
 
     # Add the branch prefix
     branch_prefix = prefix + (tab_string if is_last else tab_string)
@@ -71,19 +74,68 @@ def print_tree(node, prefix='', is_last=True, tab_string='\t'):
     for file in node[2]:
         link = file.split()[0]
         name = ' '.join(file.split()[1:-1])
-        print(f"{branch_prefix}{link} {name}");    all_info.append(f"{link} {' '.join(file.split()[1:])}")
+        file_extension = '.'+''.join(link.split('/')[-1].split('.')[1:])
+        if file_extension in name:    file_extension = ''
+        print(f"{branch_prefix}{link} {name}{file_extension}");    all_info.append(f"{link} {' '.join(file.split()[1:-1])}{file_extension} {' '.join(file.split()[-1])}")
+
+def download_files(to_download, download_dir="."):
+    dir_translation = {}
+    if '~/Desktop/' in download_dir and download_dir.count('/') == 2:
+        os.chdir(os.path.join(os.path.expanduser("~"), "Desktop"))
+        download_dir = '/'.join(download_dir.split('/')[-1:])
+        # print(download_dir)
+    else:
+        os.chdir(download_dir)
+    if not os.path.isdir(download_dir):
+        os.mkdir(download_dir)
+    for element in to_download:
+        if element[-1] == 'd':
+            dir_translation[''.join(element.split()[0].split('&openDir=')[1:]).split('/')[-1]] = ' '.join(element.split()[1:-1])
+    for element in to_download:
+        if element[-1] == 'd':
+            link_of_dir = element.split()[0]
+            name_of_dir = ' '.join(element.split()[1:-1])
+            path = ''.join(link_of_dir.split('&openDir=')[1:]).split('/')[1:]
+            translated_path = [dir_translation[path_element] for path_element in path]
+            if not os.path.isdir(f"{download_dir}/{'/'.join(translated_path)}"):
+                os.mkdir(f"{download_dir}/{'/'.join(translated_path)}")
+    
+    for element in to_download:
+        if element[-1] == 'f':
+            link_of_file = element.split()[0]
+            name_of_file = ''.join(' '.join(element.split()[1:-1]).split('/')[1:])
+            path = ''.join(link_of_file.split('&download=')[1:]).split('/')[1:-1]
+            translated_path = [dir_translation[path_element] for path_element in path]
+            response = requests.get(link_of_file)
+            open(f"{download_dir}/{'/'.join(translated_path)}/{name_of_file}".replace('//', '/'), "wb").write(response.content)
+            print(f"[+] Downloaded {download_dir}/{'/'.join(translated_path)}/{name_of_file}".replace('//', '/'))
 
 
 if __name__ == "__main__":
-     # Parse the command line arguments
-     parser = argparse.ArgumentParser(description='Generate a eclass.aueb directory tree for a given the INF number')
-     parser.add_argument('-t', '--tab-string', type=str, default='\t', help='The string used for indentation (default: \\t)')
-     parser.add_argument('-I', '--INF', type=str, required=True, help='The eclass INF number to generate the directory tree from')
-     args = parser.parse_args()
-     url = f"https://eclass.aueb.gr/modules/document/?course=INF{args.INF} Starting Link"
-     # Generate the directory tree
-     print('Generating tree structure ', end='\r')
-     tree = gen_subtree(url)
-     print(f"{loading_string} Done!")
-     # Print the directory tree
-     print_tree(tree, tab_string=args.tab_string)
+    # Parse the command line arguments
+    parser = argparse.ArgumentParser(description='Generate a eclass.aueb directory tree for a given the INF number')
+    parser.add_argument('-t', '--tab-string', type=str, default='\t', help='The string used for indentation (default: \\t)')
+    parser.add_argument('-I', '--INF', type=str, required=True, help='The eclass INF number to generate the directory tree from')
+    args = parser.parse_args()
+    
+    # Start generating the directory tree
+    print(f'Gathering eclass course info ', end='\r');    start_time = time.time()
+
+    # Get starting page title
+    response = requests.get(f"https://eclass.aueb.gr/courses/INF{args.INF}/");    soup = BeautifulSoup(response.content, 'html.parser');    h1_tag = soup.find('h1', class_='page-title');    course_title = h1_tag.text.strip()
+    url = f"https://eclass.aueb.gr/modules/document/?course=INF{args.INF} {course_title} d"
+
+    tree = gen_subtree(url)
+    delta_time = time.time() - start_time;
+    print(f"\n[+] Done! Took a total of {delta_time:.2f} seconds to get the info.\n")
+    
+    # Print the directory tree
+    print_tree(tree, tab_string=args.tab_string)
+    download_eclass = str(input("\n\n[?] Do you want to download the files of the subject to your local machine? [Y/n] "))
+    if 'Y' in download_eclass.upper():
+        download_location = str(input(f"[/] Where should the files get downloaded? (Default: ~/Desktop/{course_title}): "))
+        print()
+        if download_location == '': 
+            download_files(all_info, f"~/Desktop/{course_title}")
+        else:
+            download_files(all_info, download_location)

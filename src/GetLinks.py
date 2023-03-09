@@ -2,7 +2,7 @@ from bs4 import BeautifulSoup
 from urllib.request import Request, urlopen
 
 def get_links(url:str, filter_words:list=[]):
-     working_url, already_in_dir = url.split()[0], " ".join(url.split()[1:])
+     working_url = url.split()[0]
 
      # filter_words is used to ignore links that lead outside the subject's class
      filter_words += ['&sort', 'help.php?language=el&topic=documents', '#collapse0',
