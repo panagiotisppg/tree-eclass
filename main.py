@@ -16,4 +16,4 @@ if __name__ == "__main__":
     print(f"\nDone! Took a total of {delta_time:.2f} seconds to get the info.\n")
     # Print the directory tree
     print_tree(tree, tab_string=args.tab_string)
-    print('\n'.join(all_info))
+    # print('\n'.join(all_info))
