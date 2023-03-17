@@ -131,7 +131,7 @@ if __name__ == "__main__":
             print(f"[\u001b[31m?\033[0m] Failed to get class name, initializing value with: {args.course}.\n")
             course_title = args.course
         url = f"https://eclass.aueb.gr/modules/document/?course={args.course} {course_title} d"
-
+        print(url)
         tree = gen_subtree(url)
         delta_time = time.time() - start_time;
         print(f"\n[\u001b[32m+\033[0m] Done! Took a total of {delta_time:.2f} seconds to get the info.\n")
