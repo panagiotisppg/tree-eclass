@@ -40,5 +40,5 @@ if __name__ == "__main__":
             else:
                 download_files(all_info, download_location)
     except KeyboardInterrupt:
-        print('[\u001b[31m?\033[0m] KeyboardInterrupt. Aborting...', end = '\n\r')
+        print('\n[\u001b[31m?\033[0m] KeyboardInterrupt. Aborting...\n', end = '\n\r')
         exit()
