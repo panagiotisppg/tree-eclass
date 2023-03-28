@@ -1,6 +1,10 @@
 from bs4 import BeautifulSoup
 from urllib.request import Request, urlopen
 
+def custom_print(print_enabled, *args, **kwargs):
+     if print_enabled==True:
+          print(*args, **kwargs)
+
 def get_links(url:str, filter_words:list=[]):
      working_url = url.split()[0]
 

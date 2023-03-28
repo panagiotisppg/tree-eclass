@@ -1,0 +1,2 @@
+course (ex. INFXXX) path
+INF111 /Users/panagiotis/Desktop/Εισαγωγή στην Επιστήμη των Υπολογιστών
