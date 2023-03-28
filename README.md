@@ -6,7 +6,7 @@ files and folders for a subject from eclass
 
 ## Features
 
-- Auto-update course folder (upcoming version)
+- Auto-update course folder
 - Command line tree of subject's files and folders
 
 ## Installation
