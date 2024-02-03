@@ -63,5 +63,5 @@ if __name__ == "__main__":
         print("\n[\u001b[32m+\033[0m] Finished\n")
 
     except KeyboardInterrupt:
-        print('\n[\u001b[31mX\033[0m] KeyboardInterrupt. Aborting...\n', end = '\n\r')
+        print(f"\n[\u001b[31mX\033[0m] KeyboardInterrupt. Aborting...{' '*80}\n", end = '\n\r')
         exit()

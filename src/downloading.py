@@ -46,17 +46,18 @@ def download_files(to_download, download_dir=".", print_enabled=True, getting_up
             name_of_file = ''.join(' '.join(element.split()[1:-1]).split('/')[1:]).replace('..', '.')
             path = ''.join(link_of_file.split('&download=')[1:]).split('/')[1:-1]
             translated_path = [dir_translation[path_element] for path_element in path]
-  
+
             # Check if the file already exists and skip if it does
             final_path_of_file = f"{download_dir}/{'/'.join(translated_path)}/{name_of_file}".replace('//', '/')
             if os.path.isfile(final_path_of_file):
-                custom_print(print_enabled, f"[\u001b[33m+\033[0m] {final_path_of_file} already exists. Skipping ...")
+                print(link_of_file)
+                custom_print(print_enabled, f"[\u001b[33m+\033[0m] {final_path_of_file} \u001b[33malready exists\033[0m. \u001b[33mSkipping...\033[0m")
             else:
                 # Download the file and display a message
-                custom_print(print_enabled, f"[\u001b[32m+\033[0m] {final_path_of_file} didn't exist downloading now.", end='\r')
+                custom_print(print_enabled, f"[\u001b[32m+\033[0m] {final_path_of_file} didn't exist downloading now...", end='\r')
                 response = requests.get(link_of_file)
                 open(final_path_of_file, "wb").write(response.content)
-                custom_print(print_enabled, f"[\u001b[32m+\033[0m] Downloaded {final_path_of_file}{' '*20}")
+                custom_print(print_enabled, f"[\u001b[32m+\033[0m] Downloaded {final_path_of_file}{' '*21}")
                 objects_installed.append(final_path_of_file)
 
     custom_print(print_enabled, f"\n[\u001b[32m+\033[0m] Successfully installed {len(objects_installed)} objects.\n")
